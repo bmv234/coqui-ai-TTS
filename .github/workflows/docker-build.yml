@@ -1,0 +1,30 @@
+name: Docker Build Verification
+
+on:
+  push:
+    branches:
+      - main
+      - 'release/**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker Image
+        run: |
+          docker build -t coqui-tts-test .
+
+      - name: Run Container
+        run: |
+          docker run --rm coqui-tts-test echo "Docker image built and ran successfully."
+
+      - name: Run Tests (Optional)
+        run: |
+          docker run --rm coqui-tts-test pytest tests/
